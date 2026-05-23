@@ -1,6 +1,7 @@
 from cyvcf2 import VCF
 from tqdm import tqdm
 from pandas import DataFrame
+from pathlib import Path
 import pandas as pd
 import re
 
