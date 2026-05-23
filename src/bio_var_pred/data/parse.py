@@ -1,12 +1,12 @@
 from cyvcf2 import VCF
+from pathlib import Path
 from tqdm import tqdm
 from pandas import DataFrame
-from pathlib import Path
 import pandas as pd
 import re
 
 
-def parse_clinvar(vcf_path: str) -> DataFrame:
+def parse_clinvar(vcf_path: Path) -> DataFrame:
     vcf = VCF(vcf_path)
 
     records: list[dict] = []

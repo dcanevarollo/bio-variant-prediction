@@ -2,19 +2,14 @@ import subprocess
 from pathlib import Path
 
 
-def bgzip_and_index(vcf_file: Path) -> Path:
-    gz_file = Path(str(vcf_file) + ".gz")
+def bgzip(vcf_path: Path) -> Path:
+    gz_file = vcf_path.with_suffix(vcf_path.suffix + ".gz")
     if gz_file.exists():
-        print(f"{gz_file} already exists. Skipping compress.")
+        print(f"{gz_file.name} already compressed. Skipping new compress.")
         return gz_file
 
     subprocess.run(
-        ["bgzip", "-f", str(vcf_file)],
-        check=True
-    )
-    
-    subprocess.run(
-        ["tabix", "-p", "vcf", str(gz_file)],
+        ["bgzip", "-f", str(vcf_path)],
         check=True
     )
 
