@@ -1,7 +1,7 @@
 import os
 import subprocess
 from pathlib import Path
-from src.utils.paths import INTERIM_DATA_DIR
+from bio_var_pred.utils.paths import INTERIM_DATA_DIR
 
 
 def annotate_with_snpeff(input_vcf: Path, output_vcf: Path, heap="16g") -> Path:

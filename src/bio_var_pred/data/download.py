@@ -1,6 +1,6 @@
 import subprocess
 from pathlib import Path
-from src.utils.paths import RAW_DATA_DIR
+from bio_var_pred.utils.paths import RAW_DATA_DIR
 
 
 CLINVAR_URL = "https://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh38/clinvar.vcf.gz"

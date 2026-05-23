@@ -1,0 +1,43 @@
+name: variant-prediction
+
+channels:
+  - conda-forge
+  - bioconda
+  - pytorch
+
+dependencies:
+  - python=3.11
+
+  # Bioinformatics
+  - bcftools
+  - htslib
+  - tabix
+  - snpeff
+  - samtools
+
+  # Scientific Python
+  - numpy
+  - pandas
+  - scipy
+  - scikit-learn
+  - matplotlib
+  - jupyterlab
+  - ipykernel
+  - tqdm
+
+  # VCF parsing
+  - cyvcf2
+  - pysam
+
+  # Deep Learning
+  - pytorch
+
+  # Utilities
+  - pip
+
+  - pip:
+      - transformers
+      - sentencepiece
+      - accelerate
+      - datasets
+      - biopython

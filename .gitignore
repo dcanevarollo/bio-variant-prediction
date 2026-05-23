@@ -217,7 +217,16 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-# Local files
-/data
-.vscode
+# Data & Conda
+/data/
 snpEff*
+*.vcf
+*.vcf.gz
+*.tbi
+.conda
+
+# macOS
+.DS_Store
+
+# VS Code
+.vscode
