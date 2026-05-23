@@ -12,14 +12,11 @@ def annotate_with_snpeff(input_vcf: Path, output_vcf: Path, heap="16g") -> Path:
     env = os.environ.copy()
     env["_JAVA_OPTIONS"] = f"-Xmx{heap}"
 
-    snpeff_genes_file = INTERIM_DATA_DIR / "snpEff_genes.txt"
-    if not snpeff_genes_file.exists():
-        print("Download genes annotation for snpEff...")
-        subprocess.run(
-            ["snpEff", "download", "GRCh38.99"],
-            check=True,
-            env=env
-        )
+    subprocess.run(
+        ["snpEff", "download", "GRCh38.99"],
+        check=True,
+        env=env
+    )
 
     subprocess.run(
         ["snpEff", "GRCh38.99", input_vcf],
