@@ -85,3 +85,58 @@ def parse_clinvar(vcf_path: Path) -> DataFrame:
             break
 
     return pd.DataFrame(records)
+
+def parse_gnomad(
+    vcf_path: Path,
+    chrom: str | None = None,
+    max_variants: int | None = None,
+    max_iter: int | None = None
+) -> DataFrame:
+    vcf = VCF(vcf_path)
+
+    records: list[dict] = []
+
+    for i, variant in enumerate(tqdm(vcf, desc="Parsing gnomAD")):
+        if max_iter is not None and i >= max_iter:
+            break
+
+        if chrom is not None:
+            if variant.CHROM != chrom:
+                continue
+
+        # Only Single-Nucleotide Variants (SNVs)
+        if len(variant.REF) != 1:
+            continue
+
+        if len(variant.ALT) != 1:
+            continue
+
+        alt = variant.ALT[0]
+        if len(alt) != 1:
+            continue
+
+        # Global allele frequency
+        af = variant.INFO.get("AF")
+
+        if isinstance(af, (list, tuple)):
+            af = af[0]
+
+        ac = variant.INFO.get("AC")
+        an = variant.INFO.get("AN")
+
+        records.append({
+            "chrom": variant.CHROM,
+            "pos": variant.POS,
+            "ref": variant.REF,
+            "alt": alt,
+            "filter": variant.FILTER,
+            "qual": variant.QUAL,
+            "af": af,
+            "ac": ac,
+            "an": an
+        })
+
+        if max_variants is not None and len(records) >= max_variants:
+            break
+
+    return pd.DataFrame(records)
