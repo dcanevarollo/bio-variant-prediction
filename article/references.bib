@@ -1,0 +1,329 @@
+@article {mikhail,
+	author = {Gudkov, Mikhail and Thibaut, Lo{\"\i}c and Monger, Steven and Das, Debjani and Congenital Heart Disease Synergy Study group and Winlaw, David S. and Dunwoodie, Sally L. and Giannoulatou, Eleni},
+	title = {Benchmarking of variant pathogenicity prediction methods using a population genetics approach},
+	elocation-id = {2025.03.16.643565},
+	year = {2025},
+	doi = {10.1101/2025.03.16.643565},
+	publisher = {Cold Spring Harbor Laboratory},
+	abstract = {Motivation Variant pathogenicity predictors are essential for identifying new associations between genetic variants and rare diseases. However, despite the availability of numerous predictors, there is no clear consensus on which methods provide the most reliable results. The common practice of training, testing, and benchmarking these predictors using known variant sets from disease or mutagenesis studies raises concerns about ascertainment bias and data circularity.Results We benchmarked commonly used pathogenicity predictors using an orthogonal approach that does not rely on predefined {\textquotedblleft}ground truth{\textquotedblright} datasets. By leveraging population-level genomic data from gnomAD and the Context-Adjusted Proportion of Singletons (CAPS) metric, we identified CADD and REVEL as the best-performing predictors for distinguishing extremely deleterious variants from moderately deleterious ones. REVEL demonstrated superior calibration. Additionally, we show that CAPS can serve as a meta-analysis tool for interpreting variant annotations and highlight biases in ClinVar-based predictor training.Availability and Implementation CAPS analysis and benchmarking results are available at https://github.com/mgudVCCRI/PopGenVariantFilteringContact e.giannoulatou{at}victorchang.edu.auCompeting Interest StatementThe authors have declared no competing interest.NHMRCNSW Health Early-Mid Career Fellowship},
+	URL = {https://www.biorxiv.org/content/early/2025/08/08/2025.03.16.643565},
+	eprint = {https://www.biorxiv.org/content/early/2025/08/08/2025.03.16.643565.full.pdf},
+	journal = {bioRxiv}
+}
+
+@ARTICLE{alirezaie,
+  title    = "{ClinPred}: Prediction Tool to Identify {Disease-Relevant}
+              Nonsynonymous {Single-Nucleotide} Variants",
+  author   = "Alirezaie, Najmeh and Kernohan, Kristin D and Hartley, Taila and
+              Majewski, Jacek and Hocking, Toby Dylan",
+  abstract = "Advances in high-throughput DNA sequencing have revolutionized
+              the discovery of variants in the human genome; however,
+              interpreting the phenotypic effects of those variants is still a
+              challenge. While several computational approaches to predict
+              variant impact are available, their accuracy is limited and
+              further improvement is needed. Here, we introduce ClinPred, an
+              efficient tool for identifying disease-relevant nonsynonymous
+              variants. Our predictor incorporates two machine learning
+              algorithms that use existing pathogenicity scores and, notably,
+              benefits from inclusion of normal population allele frequency
+              from the gnomAD database as an input feature. Another major
+              strength of our approach is the use of ClinVar-a rapidly growing
+              database that allows selection of confidently annotated
+              disease-causing variants-as a training set. Compared to other
+              methods, ClinPred showed superior accuracy for predicting
+              pathogenicity, achieving the highest area under the curve (AUC)
+              score and increasing both the specificity and sensitivity in
+              different test datasets. It also obtained the best performance
+              according to various other metrics. Moreover, ClinPred
+              performance remained robust with respect to disease type (cancer
+              or rare disease) and mechanism (gain or loss of function).
+              Importantly, we observed that adding allele frequency as a
+              predictive feature-as opposed to setting fixed allele frequency
+              cutoffs-boosts the performance of prediction. We provide
+              pre-computed ClinPred scores for all possible human missense
+              variants in the exome to facilitate its use by the community.",
+  journal  = "Am J Hum Genet",
+  volume   =  103,
+  number   =  4,
+  pages    = "474--483",
+  month    =  sep,
+  year     =  2018,
+  address  = "United States",
+  keywords = "cancer; computational biology; diagnostic; machine learning;
+              pathogenicity prediction; predictive modeling; rare disease;
+              variant interpretation; whole-exome sequencing",
+  language = "en"
+}
+
+@ARTICLE{sharo,
+  title    = "{ClinVar} and {HGMD} genomic variant classification accuracy has
+              improved over time, as measured by implied disease burden",
+  author   = "Sharo, Andrew G and Zou, Yangyun and Adhikari, Aashish N and
+              Brenner, Steven E",
+  abstract = "BACKGROUND: Curated databases of genetic variants assist
+              clinicians and researchers in interpreting genetic variation.
+              Yet, these databases contain some misclassified variants. It is
+              unclear whether variant misclassification is abating as these
+              databases rapidly grow and implement new guidelines. METHODS:
+              Using archives of ClinVar and HGMD, we investigated how variant
+              misclassification has changed over 6 years, across different
+              ancestry groups. We considered inborn errors of metabolism (IEMs)
+              screened in newborns as a model system because these disorders
+              are often highly penetrant with neonatal phenotypes. We used
+              samples from the 1000 Genomes Project (1KGP) to identify
+              individuals with genotypes that were classified by the databases
+              as pathogenic. Due to the rarity of IEMs, nearly all such
+              classified pathogenic genotypes indicate likely variant
+              misclassification in ClinVar or HGMD. RESULTS: While the
+              false-positive rates of both ClinVar and HGMD have improved over
+              time, HGMD variants currently imply two orders of magnitude more
+              affected individuals in 1KGP than ClinVar variants. We observed
+              that African ancestry individuals have a significantly increased
+              chance of being incorrectly indicated to be affected by a
+              screened IEM when HGMD variants are used. However, this bias
+              affecting genomes of African ancestry was no longer significant
+              once common variants were removed in accordance with recent
+              variant classification guidelines. We discovered that ClinVar
+              variants classified as Pathogenic or Likely Pathogenic are
+              reclassified sixfold more often than DM or DM? variants in HGMD,
+              which has likely resulted in ClinVar's lower false-positive rate.
+              CONCLUSIONS: Considering misclassified variants that have since
+              been reclassified reveals our increasing understanding of rare
+              genetic variation. We found that variant classification
+              guidelines and allele frequency databases comprising genetically
+              diverse samples are important factors in reclassification. We
+              also discovered that ClinVar variants common in European and
+              South Asian individuals were more likely to be reclassified to a
+              lower confidence category, perhaps due to an increased chance of
+              these variants being classified by multiple submitters. We
+              discuss features for variant classification databases that would
+              support their continued improvement.",
+  journal  = "Genome Med",
+  volume   =  15,
+  number   =  1,
+  pages    = "51",
+  month    =  jul,
+  year     =  2023,
+  address  = "England",
+  keywords = "ClinVar; HGMD; Inborn errors of metabolism; Pathogenic variant;
+              Variant classification; Variant curation",
+  language = "en"
+}
+
+@ARTICLE{clinvar,
+  title    = "{ClinVar}: updates to support classifications of both germline
+              and somatic variants",
+  author   = "Landrum, Melissa J and Chitipiralla, Shanmuga and Kaur, Kuljeet
+              and Brown, Garth and Chen, Chao and Hart, Jennifer and Hoffman,
+              Douglas and Jang, Wonhee and Liu, Chunlei and Maddipatla, Zenith
+              and Maiti, Rama and Mitchell, Joseph and Rezaie, Tayebeh and
+              Riley, George and Song, Guangfeng and Yang, Jinpeng and Ziyabari,
+              Lora and Russette, Andrew and Kattman, Brandi L",
+  abstract = "ClinVar (www.ncbi.nlm.nih.gov/clinvar/) is a free, public
+              database of human genetic variants and their relationships to
+              disease, with >3 million variants submitted by >2800
+              organizations across the world. The database was recently updated
+              to have three types of classifications: germline, oncogenicity
+              and clinical impact for somatic variants. As for germline
+              variants, classifications for somatic variants can be submitted
+              in batches in a file submission or through the submission API;
+              variants can also be submitted and updated one at a time in
+              online submission forms. The ClinVar XML files were redesigned to
+              allow multiple classification types. Both old and new formats of
+              the XML are supported through the end of 2024. Data for somatic
+              classifications were also added to the ClinVar VCF files and to
+              several tab-delimited files. The ClinVar VCV pages were updated
+              to display the three types of classifications, both as it was
+              submitted and as it was aggregated by ClinVar. Clinical testing
+              laboratories and others in the cancer community are invited to
+              share their classifications of somatic variant classifications
+              through ClinVar to provide transparency in genomic testing and
+              improve patient care.",
+  journal  = "Nucleic Acids Res",
+  volume   =  53,
+  number   = "D1",
+  pages    = "D1313--D1321",
+  month    =  jan,
+  year     =  2025,
+  address  = "England",
+  language = "en"
+}
+
+@ARTICLE{gnomad,
+  title    = "A genomic mutational constraint map using variation in 76,156
+              human genomes",
+  author   = "Chen, Siwei and Francioli, Laurent C and Goodrich, Julia K and
+              Collins, Ryan L and Kanai, Masahiro and Wang, Qingbo and
+              Alf{\"o}ldi, Jessica and Watts, Nicholas A and Vittal,
+              Christopher and Gauthier, Laura D and Poterba, Timothy and
+              Wilson, Michael W and Tarasova, Yekaterina and Phu, William and
+              Grant, Riley and Yohannes, Mary T and Koenig, Zan and Farjoun,
+              Yossi and Banks, Eric and Donnelly, Stacey and Gabriel, Stacey
+              and Gupta, Namrata and Ferriera, Steven and Tolonen, Charlotte
+              and Novod, Sam and Bergelson, Louis and Roazen, David and
+              Ruano-Rubio, Valentin and Covarrubias, Miguel and Llanwarne,
+              Christopher and Petrillo, Nikelle and Wade, Gordon and Jeandet,
+              Thibault and Munshi, Ruchi and Tibbetts, Kathleen and Abreu,
+              Maria and Aguilar Salinas, Carlos A and Ahmad, Tariq and Albert,
+              Christine M and Ardissino, Diego and Armean, Irina M and
+              Atkinson, Elizabeth G and Atzmon, Gil and Barnard, John and
+              Baxter, Samantha M and Beaugerie, Laurent and Benjamin, Emelia J
+              and Benjamin, David and Boehnke, Michael and Bonnycastle, Lori L
+              and Bottinger, Erwin P and Bowden, Donald W and Bown, Matthew J
+              and Brand, Harrison and Brant, Steven and Brookings, Ted and
+              Bryant, Sam and Calvo, Sarah E and Campos, Hannia and Chambers,
+              John C and Chan, Juliana C and Chao, Katherine R and Chapman,
+              Sin{\'e}ad and Chasman, Daniel I and Chisholm, Rex and Cho, Judy
+              and Chowdhury, Rajiv and Chung, Mina K and Chung, Wendy K and
+              Cibulskis, Kristian and Cohen, Bruce and Connolly, Kristen M and
+              Correa, Adolfo and Cummings, Beryl B and Dabelea, Dana and
+              Danesh, John and Darbar, Dawood and Darnowsky, Phil and Denny,
+              Joshua and Duggirala, Ravindranath and Dupuis, Jos{\'e}e and
+              Ellinor, Patrick T and Elosua, Roberto and Emery, James and
+              England, Eleina and Erdmann, Jeanette and Esko, T{\~o}nu and
+              Evangelista, Emily and Fatkin, Diane and Florez, Jose and Franke,
+              Andre and Fu, Jack and F{\"a}rkkil{\"a}, Martti and Garimella,
+              Kiran and Gentry, Jeff and Getz, Gad and Glahn, David C and
+              Glaser, Benjamin and Glatt, Stephen J and Goldstein, David and
+              Gonzalez, Clicerio and Groop, Leif and Gudmundsson, Sanna and
+              Haessly, Andrea and Haiman, Christopher and Hall, Ira and Hanis,
+              Craig L and Harms, Matthew and Hiltunen, Mikko and Holi, Matti M
+              and Hultman, Christina M and Jalas, Chaim and Kallela, Mikko and
+              Kaplan, Diane and Kaprio, Jaakko and Kathiresan, Sekar and Kenny,
+              Eimear E and Kim, Bong-Jo and Kim, Young Jin and King, Daniel and
+              Kirov, George and Kooner, Jaspal and Koskinen, Seppo and
+              Krumholz, Harlan M and Kugathasan, Subra and Kwak, Soo Heon and
+              Laakso, Markku and Lake, Nicole and Langsford, Trevyn and
+              Laricchia, Kristen M and Lehtim{\"a}ki, Terho and Lek, Monkol and
+              Lipscomb, Emily and Loos, Ruth J F and Lu, Wenhan and Lubitz,
+              Steven A and Luna, Teresa Tusie and Ma, Ronald C W and Marcus,
+              Gregory M and Marrugat, Jaume and Mattila, Kari M and McCarroll,
+              Steven and McCarthy, Mark I and McCauley, Jacob L and McGovern,
+              Dermot and McPherson, Ruth and Meigs, James B and Melander, Olle
+              and Metspalu, Andres and Meyers, Deborah and Minikel, Eric V and
+              Mitchell, Braxton D and Mootha, Vamsi K and Naheed, Aliya and
+              Nazarian, Saman and Nilsson, Peter M and O'Donovan, Michael C and
+              Okada, Yukinori and Ongur, Dost and Orozco, Lorena and Owen,
+              Michael J and Palmer, Colin and Palmer, Nicholette D and Palotie,
+              Aarno and Park, Kyong Soo and Pato, Carlos and Pulver, Ann E and
+              Rader, Dan and Rahman, Nazneen and Reiner, Alex and Remes, Anne M
+              and Rhodes, Dan and Rich, Stephen and Rioux, John D and Ripatti,
+              Samuli and Roden, Dan M and Rotter, Jerome I and Sahakian, Nareh
+              and Saleheen, Danish and Salomaa, Veikko and Saltzman, Andrea and
+              Samani, Nilesh J and Samocha, Kaitlin E and Sanchis-Juan, Alba
+              and Scharf, Jeremiah and Schleicher, Molly and Schunkert,
+              Heribert and Sch{\"o}nherr, Sebastian and Seaby, Eleanor G and
+              Shah, Svati H and Shand, Megan and Sharpe, Ted and Shoemaker,
+              Moore B and Shyong, Tai and Silverman, Edwin K and Singer-Berk,
+              Moriel and Sklar, Pamela and Smith, Jonathan T and Smith, J
+              Gustav and Soininen, Hilkka and Sokol, Harry and Son, Rachel G
+              and Soto, Jose and Spector, Tim and Stevens, Christine and
+              Stitziel, Nathan O and Sullivan, Patrick F and Suvisaari, Jaana
+              and Tai, E Shyong and Taylor, Kent D and Teo, Yik Ying and
+              Tsuang, Ming and Tuomi, Tiinamaija and Turner, Dan and
+              Tusie-Luna, Teresa and Vartiainen, Erkki and Vawter, Marquis and
+              Wang, Lily and Wang, Arcturus and Ware, James S and Watkins, Hugh
+              and Weersma, Rinse K and Weisburd, Ben and Wessman, Maija and
+              Whiffin, Nicola and Wilson, James G and Xavier, Ramnik J and
+              O'Donnell-Luria, Anne and Solomonson, Matthew and Seed, Cotton
+              and Martin, Alicia R and Talkowski, Michael E and Rehm, Heidi L
+              and Daly, Mark J and Tiao, Grace and Neale, Benjamin M and
+              MacArthur, Daniel G and Karczewski, Konrad J and {Genome
+              Aggregation Database Consortium}",
+  abstract = "The depletion of disruptive variation caused by purifying natural
+              selection (constraint) has been widely used to investigate
+              protein-coding genes underlying human disorders1--4, but attempts
+              to assess constraint for non-protein-coding regions have proved
+              more difficult. Here we aggregate, process and release a dataset
+              of 76,156 human genomes from the Genome Aggregation Database
+              (gnomAD)---the largest public open-access human genome allele
+              frequency reference dataset---and use it to build a genomic
+              constraint map for the whole genome (genomic non-coding
+              constraint of haploinsufficient variation (Gnocchi)). We present
+              a refined mutational model that incorporates local sequence
+              context and regional genomic features to detect depletions of
+              variation. As expected, the average constraint for protein-coding
+              sequences is stronger than that for non-coding regions. Within
+              the non-coding genome, constrained regions are enriched for known
+              regulatory elements and variants that are implicated in complex
+              human diseases and traits, facilitating the triangulation of
+              biological annotation, disease association and natural selection
+              to non-coding DNA analysis. More constrained regulatory elements
+              tend to regulate more constrained protein-coding genes, which in
+              turn suggests that non-coding constraint can aid the
+              identification of constrained genes that are as yet unrecognized
+              by current gene constraint metrics. We demonstrate that this
+              genome-wide constraint map improves the identification and
+              interpretation of functional human genetic variation.",
+  journal  = "Nature",
+  volume   =  625,
+  number   =  7993,
+  pages    = "92--100",
+  month    =  jan,
+  year     =  2024
+}
+
+@article{esm2,
+  title={Language models of protein sequences at the scale of evolution enable accurate structure prediction},
+  author={Lin, Zeming and Akin, Halil and Rao, Roshan and Hie, Brian and Zhu, Zhongkai and Lu, Wenting and Smetanin, Nikita and dos Santos Costa, Allan and Fazel-Zarandi, Maryam and Sercu, Tom and Candido, Sal and others},
+  journal={bioRxiv},
+  year={2022},
+  publisher={Cold Spring Harbor Laboratory}
+}
+
+@article {prost5,
+	author = {Heinzinger, Michael and Weissenow, Konstantin and Sanchez, Joaquin Gomez and Henkel, Adrian and Steinegger, Martin and Rost, Burkhard},
+	title = {ProstT5: Bilingual Language Model for Protein Sequence and Structure},
+	elocation-id = {2023.07.23.550085},
+	year = {2023},
+	doi = {10.1101/2023.07.23.550085},
+	publisher = {Cold Spring Harbor Laboratory},
+	abstract = {Advanced Artificial Intelligence (AI) enabled large language models (LLMs) to revolutionize Natural Language Processing (NLP). Their adaptation to protein sequences spawned the development of powerful protein language models (pLMs). Concurrently, AlphaFold2 broke through in protein structure prediction. For the first time, we can now systematically and comprehensively explore the dual nature of proteins that act and exist as three-dimensional (3D) machines and evolve in linear strings of one-dimensional (1D) sequences. Here, we leverage pLMs to simultaneously model both modalities by combining 1D sequences with 3D structure in one generic model. For this, we encode protein structures as token sequences using the 3Di-alphabet introduced by Foldseek. The resulting {\textquotedblleft}structure-sequence{\textquotedblright} representation is processed by a pLM to extract features and patterns. Toward this end, we constructed a non-redundant dataset from AlphaFoldDB and fine-tuned an existing pLM (ProtT5) to translate between 3Di and amino acid sequences. As a proof-of-concept for our novel approach, dubbed Protein structure-sequence T5 (ProstT5), we showed improved performance for subsequent prediction tasks, and for {\textquotedblleft}inverse folding{\textquotedblright}, namely the generation of novel protein sequences adopting a given structural scaffold ({\textquotedblleft}fold{\textquotedblright}). Our work showcased the potential of pLMs to tap into the information-rich protein structure revolution fueled by AlphaFold2. It paves the way for the development of tools optimizing the integration of this vast 3D structure data resource, opening new research avenues in the post AlphaFold2 era. We released our model at https://github.com/mheinzinger/ProstT5.Competing Interest StatementThe authors have declared no competing interest.1Done-dimensional (string such as secondary structure)3Dthree-dimensional (coordinates)3Di1D-strings representing protein 3D structure (taken from Foldseek [1])AFDBAlphaFold Protein Structure DatabaseAIArtificial IntelligenceCATHhierarchical classification of protein 3D structures in Class, Architecture, Topology and Homologous superfamilyCNNconvolutional neural networkEATEmbedding-based Annotation Transfer; embeddings fixed-size vectors derived from pre-trained pLMsLLMlarge language modelMLmachine learning (here we drop the distinction between ML and AI considering existing delineations more or less arbitrary for our ends)pLMprotein Language ModelSOTAstate-of-the-art.},
+	URL = {https://www.biorxiv.org/content/early/2023/07/25/2023.07.23.550085},
+	eprint = {https://www.biorxiv.org/content/early/2023/07/25/2023.07.23.550085.full.pdf},
+	journal = {bioRxiv}
+}
+
+@ARTICLE{stein,
+  title    = "Expanding the utility of variant effect predictions with
+              phenotype-specific models",
+  author   = "Stein, David and Kars, Meltem Ece and Milisavljevic, Baptiste and
+              Mort, Matthew and Stenson, Peter D and Casanova, Jean-Laurent and
+              Cooper, David N and Boisson, Bertrand and Zhang, Peng and
+              Schlessinger, Avner and Itan, Yuval",
+  abstract = "Current methods for variant effect prediction do not
+              differentiate between pathogenic variants resulting in different
+              disease outcomes and are restricted in application due to a focus
+              on variants with a single molecular consequence. We have
+              developed Variant-to-Phenotype (V2P), a multi-task, multi-output
+              machine learning model to predict variant pathogenicity
+              conditioned on top-level Human Phenotype Ontology disease
+              phenotypes (n = 23) for single nucleotide variants and
+              insertions/deletions throughout the human genome. V2P leverages a
+              unique approach for the modeling of variant effect that
+              incorporates resultant disease phenotypes as output and during
+              training to improve the quality of variant disease phenotype and
+              effect predictions, simultaneously. We describe the architecture,
+              training strategy, and biological features contributing to V2P's
+              output, revealing initial characteristics underlying the
+              relationship between disease genotype and phenotype. Moreover, we
+              demonstrate the benefit of incorporating disease phenotypes for
+              variant effect predictions by comparing V2P with several variant
+              effect predictors across various high-quality evaluation datasets
+              from manually curated databases and functional assays. Finally,
+              we examine how V2P's predictions result in the successful
+              identification of pathogenic variants in real and simulated
+              patient sequencing data, outperforming other tested methods in
+              initial comparisons. V2P offers a complete mapping of human
+              genetic variants to disease-phenotypes, offering a uniquely
+              conditioned set of variant effect characterizations.",
+  journal  = "Nat Commun",
+  volume   =  16,
+  number   =  1,
+  pages    = "11113",
+  month    =  nov,
+  year     =  2025,
+  address  = "England",
+  language = "en"
+}
+
