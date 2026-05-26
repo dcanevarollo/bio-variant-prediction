@@ -125,8 +125,8 @@ def parse_gnomad(
         an = variant.INFO.get("AN")
 
         records.append({
-            "chrom": variant.CHROM,
-            "pos": variant.POS,
+            "chrom": str(variant.CHROM)[-1], # Only interested in the last char
+            "pos_genomic": variant.POS,
             "ref": variant.REF,
             "alt": alt,
             "filter": variant.FILTER,
