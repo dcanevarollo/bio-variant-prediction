@@ -22,22 +22,22 @@
 \maketitle
 
 \begin{abstract}
-Single‑nucleotide variants in the human exome, especially missense mutations, can severely disrupt protein structure and function and are linked to rare diseases, complex disorders, and cancer. Predicting their pathogenicity is challenging due to the large number of variants per individual and limited experimental data. ClinVar and gnomAD provide clinical labels and population‑scale allele frequencies, enabling the development of computational predictors. Protein Language Models (pLMs), such as ESM‑2 and Prot‑T5, have been used to predict the functional impact of human missense variants. This paper evaluates and compares mutation representation strategies — such as pLM log‑ratio, delta‑embeddings, and incorporation of gnomAD frequencies — for predicting pathogenicity‑linked functional impact in low‑data regimes per gene. The focus is on scenarios with few annotated variants, and an evaluation protocol based on zero‑shot and few‑shot settings is proposed.
+Single-nucleotide variants in the human exome, especially missense mutations, can severely disrupt protein structure and function and are linked to rare diseases, complex disorders, and cancer. Predicting their pathogenicity is challenging due to the large number of variants per individual and limited experimental data. ClinVar and gnomAD provide clinical labels and population-scale allele frequencies, enabling the development of computational predictors. Protein Language Models (pLMs), such as ESM-2 and Prot-T5, have been used to predict the functional impact of human missense variants. This paper evaluates and compares mutation representation strategies — such as pLM log-ratio, delta-embeddings, and incorporation of gnomAD frequencies — for predicting pathogenicity-linked functional impact in low-data regimes per gene. The focus is on scenarios with few annotated variants, and an evaluation protocol based on zero-shot settings is proposed.
 \end{abstract}
 
 \maketitle
 
 \section{Introduction}
 
-Single‑nucleotide variants in the human exome, especially missense mutations, can drastically alter the structure and function of the target protein, and are often associated with cancer, complex diseases, and rare genetic disorders. Hence, the accurate classification of these variants as pathogenic or benign stands as a central challenge in genomic medicine. On average, the human exome harbors around 20,000 single‑nucleotide variants \cite{alirezaie}, further amplifying the need for scalable computational tools to support clinical databases. Errors in variant classification may directly impact medical diagnosis and treatment recommendations \cite{sharo}.
+Single-nucleotide variants in the human exome, especially missense mutations, can drastically alter the structure and function of the target protein, and are often associated with cancer, complex diseases, and rare genetic disorders. Hence, the accurate classification of these variants as pathogenic or benign stands as a central challenge in genomic medicine. On average, the human exome harbors around 20,000 single-nucleotide variants \cite{alirezaie}, further amplifying the need for scalable computational tools to support clinical databases. Errors in variant classification may directly impact medical diagnosis and treatment recommendations \cite{sharo}.
 
 In this context, population genomics databases have become key resources for pathogenicity prediction \cite{sharo}. The Genome Aggregation Database (gnomAD) \cite{gnomad}, for instance, aggregates variant frequencies across large cohorts of healthy individuals, enabling the identification of rare variants — often potentially pathogenic — while filtering out common variants unlikely to cause rare diseases. Such databases can be combined with specialized annotation resources, as ClinVar \cite{clinvar}, which curates clinical interpretations of variants. Pathogenicity prediction tools such as ClinPred \cite{mikhail} already leverage this combination of ClinVar and gnomAD to train and validate their classification models.
 
-On another front, advances in Artificial Intelligence (AI) have enabled Large Language Models (LLMs) to revolutionize Natural Language Processing (NLP). Their adaptation to protein sequences has led to the development of powerful protein Language Models (pLMs) \cite{prost5}. These models have been used to predict the impact of missense mutations in human proteins, including architectures such as Evolutionary Scale Modeling (ESM‑2) \cite{esm2} and Prot-T5 \cite{prost5}, in tasks ranging from protein stability to “variant effect” prediction related to phenotypes.
+On another front, advances in Artificial Intelligence (AI) have enabled Large Language Models (LLMs) to revolutionize Natural Language Processing (NLP). Their adaptation to protein sequences has led to the development of powerful protein Language Models (pLMs) \cite{prost5}. These models have been used to predict the impact of missense mutations in human proteins, including architectures such as Evolutionary Scale Modeling (ESM-2) \cite{esm2} and Prot-T5 \cite{prost5}, in tasks ranging from protein stability to “variant effect” prediction related to phenotypes.
 
-However, although these pLMs are promising, few systematic studies evaluate specific representation strategies under scenarios of low data availability per gene, using ClinVar as a label source and gnomAD as a population filter \cite{stein}. Representation choices — such as pLM log‑ratio, delta‑embedding, or the use of gnomAD allele frequencies as a feature — may have a larger impact on performance than the choice of the pLM itself \cite{alirezaie}. Moreover, for many genes associated with rare diseases, the number of experimentally or clinically annotated variants is small, which reinforces the need to study zero‑shot, few‑shot, and low‑data settings \cite{sharo}.
+However, although these pLMs are promising, few systematic studies evaluate specific representation strategies under scenarios of low data availability per gene, using ClinVar as a label source and gnomAD as a population filter \cite{stein}. Representation choices — such as pLM log-ratio, delta-embedding, or the use of gnomAD allele frequencies as a feature — may have a larger impact on performance than the choice of the pLM itself \cite{alirezaie}. Moreover, for many genes associated with rare diseases, the number of experimentally or clinically annotated variants is small, which reinforces the need to study zero-shot, few-shot, and low-data settings \cite{sharo}.
 
-In this light, this paper aims to evaluate and compare representation strategies based on protein Language Models for predicting the functional impact linked to the pathogenicity of human point variants. ClinVar is used as the source of pathogenicity labels and gnomAD as a source of population frequency data, focusing especially on low‑data scenarios per gene. Additionally, different mutation representations for human missense variants are compared and an evaluation protocol is proposed to explicitly assess zero‑shot and few‑shot regimes.
+In this light, this paper aims to evaluate and compare representation strategies based on protein Language Models for predicting the functional impact linked to the pathogenicity of human point variants. ClinVar is used as the source of pathogenicity labels and gnomAD as a source of population frequency data, focusing especially on low-data scenarios per gene. Additionally, different mutation representations for human missense variants are compared and an evaluation protocol is proposed to explicitly assess zero-shot and few-shot regimes.
 
 \section{Related Work}
 
@@ -45,15 +45,89 @@ The prediction of missense variant effect has long been a central problem in com
 
 Clinical and population databases have played a crucial role in this research area. ClinVar provides curated interpretations of human variants and is widely used as a source of pathogenicity labels, while gnomAD offers population-scale allele frequency information that helps distinguish rare potentially disease-causing variants from common benign ones. In recent studies, combining clinical labels with population frequencies has proven useful for benchmarking and training variant pathogenicity predictors, especially under realistic clinical conditions where labeled data are limited and noisy \cite{saadat}. However, the reliability of these resources still depends on the gene, the disease context, and the distribution of available annotations, which motivates careful evaluation protocols and gene-specific analyses \cite{clinvar}.
 
-The emergence of protein language models has substantially changed the landscape of variant effect prediction. Inspired by large language models in natural language processing, protein language models learn statistical representations from massive collections of amino acid sequences without requiring explicit supervision. These embeddings capture evolutionary and functional regularities that can be transferred to downstream tasks such as structure prediction, function annotation, stability estimation, and mutation effect prediction \cite{liu}. Representative models such as ESM, ESM-2, ProtTrans, and ProT5 have shown that sequence-only pretraining can produce biologically meaningful representations, even in settings where labeled data are scarce. This has made protein language models especially attractive for zero-shot and few-shot prediction problems, where conventional supervised methods struggle \cite{sun}.
+The emergence of protein language models has substantially changed the landscape of variant effect prediction. Inspired by large language models in natural language processing, protein language models learn statistical representations from massive collections of amino acid sequences without requiring explicit supervision. These embeddings capture evolutionary and functional regularities that can be transferred to downstream tasks such as structure prediction, function annotation, stability estimation, and mutation effect prediction \cite{liu}. Representative models such as ESM, ESM-2, ProtTrans, and ProT5 have shown that sequence-only pretraining can produce biologically meaningful representations, even in settings where labeled data are scarce. This has made protein language models especially attractive for zero-shot prediction problems, where conventional supervised methods struggle \cite{sun}.
 
 A growing body of work has specifically examined how protein language models can be used to predict mutation pathogenicity. One important line of research showed that large pre-trained protein language models act as zero-shot predictors for disease-causing mutations and even clinical prognosis in cancer-related genes, outperforming strong baselines such as EVE in certain benchmarks \cite{sun}. These findings suggest that mutation scores derived from the model's output distribution, such as evolutionary index or log-ratio style measures, may capture functionally relevant constraints directly from sequence statistics. Other studies have explored alternative mutation representations, including delta embeddings and embedding differences between wild-type and mutant sequences, showing that representation choice can influence performance as much as model architecture itself \cite{liu}.
 
 At the same time, recent literature has highlighted the limits of sequence-only modeling. Variant effects are not determined by sequence alone, since structural context, residue interactions, and local protein environments can strongly influence functional consequences. In response, structure-informed protein language models have been proposed to inject structural supervision during training while still using sequence-only inputs at prediction time. A recent study reported that structured-informed models were robust predictors of variant effects across deep mutational scanning benchmarks and that adding structural context could improve robustness more effectively than simply scaling model size or training data \cite{sun}. These results suggest that biological context beyond raw sequence can help reduce overfitting and improve generalization, especially in difficult protein families.
 
-Recent benchmark studies have also stressed the importance of evaluation design. Rather than relying only on global averages, modern assessments increasingly examine calibration, zero-shot behavior, gene-specific performance, and performance under low-data regimes. This is particularly relevant for missense variant prediction, where the number of labeled examples per gene is often small and the class balance can vary substantially \cite{vasquez}. Benchmarking work has shown that continuous and binary predictors may behave differently depending on the target setting, and that interpretation frameworks should consider both predictive quality and practical clinical usability. In this context, low-data and few-shot experiments are especially valuable because they approximate the real constraints faced in rare-disease and gene-specific applications.
+Recent benchmark studies have also stressed the importance of evaluation design. Rather than relying only on global averages, modern assessments increasingly examine calibration, zero-shot behavior, gene-specific performance, and performance under low-data regimes. This is particularly relevant for missense variant prediction, where the number of labeled examples per gene is often small and the class balance can vary substantially \cite{vasquez}. Benchmarking work has shown that continuous and binary predictors may behave differently depending on the target setting, and that interpretation frameworks should consider both predictive quality and practical clinical usability. In this context, low-data experiments are especially valuable because they approximate the real constraints faced in rare-disease and gene-specific applications.
 
-Taken together, the literature indicates a clear progression from conservation-based methods to protein language model approaches, and more recently to structure-informed and benchmark-driven frameworks \cite{liu}. However, there is still room for systematic comparison of mutation representation strategies under low-data conditions, especially when ClinVar labels and gnomAD frequencies are combined at the gene level \cite{sun}. This study is positioned within this gap by evaluation different protein language model representations for missense variant pathogenicity prediction in sparse-data settings, with explicit attention to zero-shot and few-shot regimes.
+Taken together, the literature indicates a clear progression from conservation-based methods to protein language model approaches, and more recently to structure-informed and benchmark-driven frameworks \cite{liu}. However, there is still room for systematic comparison of mutation representation strategies under low-data conditions, especially when ClinVar labels and gnomAD frequencies are combined at the gene level \cite{sun}. This study is positioned within this gap by evaluation different protein language model representations for missense variant pathogenicity prediction in sparse-data settings, with explicit attention to zero-shot regimes.
+
+\section{Materials and Methods}
+
+\subsection{Data Sources and Variant Collection}
+
+Human missense variants were collected from ClinVar and gnomAD. ClinVar served as the primary source of clinical pathogenicity annotations, whereas gnomAD provided population allele frequency information for each variant.
+
+ClinVar Variant Call Format (VCF) files were downloaded and functionally annotated with snpEff \cite{snpEff} to obtain transcript-level and protein-level consequence annotations, including amino acid substitutions and protein coordinates. Only variants annotated as missense were retained for downstream analyses.
+
+For each retained variant, the following information was extracted: chromosomal position, reference and alternate alleles, protein position, wild-type amino acid, mutant amino acid, ClinVar clinical significance label, and gnomAD allele frequency. Variants were mapped to protein sequences using the GRCh38 \cite{grch38} human reference build, and protein-level annotations were derived from the \textit{ANN} field generated during functional annotation.
+
+To reduce label noise, ClinVar annotations were grouped into binary classes: pathogenic and likely pathogenic were assigned to pathogenic class, whereas benign and likely benign were assigned to benign class. Variants labeled as uncertain significance, conflicting interpretations, or lacking clear review criteria were excluded from the primary analyses.
+
+\subsection{Population Frequency Integration}
+
+Population allele frequencies were retrieved from gnomAD exome datasets and matched to ClinVar variants using genomic coordinates and allelic information. Because allele frequency distributions are highly skewed, frequencies were transformed using logarithmic scaling, as shown below:
+
+\begin{equation}
+    log\_AF = log_{10}(AF + \epsilon)
+\end{equation}
+
+where $\epsilon$ is a small constant added to avoid undefined values for zero-frequency variants. The transformed allele frequency was used as an auxiliary feature alongside protein language model representations.
+
+\subsection{Protein Sequence Representation}
+
+Protein representations were generated using pre-trained protein language models, with emphasis on ESM-2 and Prot-T5. For each protein, the wild-type amino acid sequence was provided as input to the model, and mutation-aware representations were then derived using multiple strategies.
+
+\subsection{Log-Ratio Representation}
+
+For a mutation at position $i$, the conditional probabilities assigned by the model to the wild-type residue $a_{wt}$ and the mutant residue $a_{mut}$ were extracted. The mutation score was computed as:
+
+\begin{equation}
+    log\_Ratio = logP(a_{mut} | context) - logP(a_{wt} | context)
+\end{equation}
+
+This representation estimates how compatible the mutant residue is with the contextual sequence constraints learned by the model.
+
+\subsection{Delta-Embedding Representation}
+
+Hidden-state embeddings corresponding to the mutated residue position were extracted for both the wild-type and mutant residues. A delta-embedding vector was computed as:
+
+\begin{equation}
+    \Delta\epsilon = \epsilon_{mut} - \epsilon_{wt}
+\end{equation}
+
+where $\epsilon_{wt}$ and $\epsilon_{mut}$ denote the latent embeddings of the wild-type and mutant amino acids, respectively. This representation captures local semantic changes induced by the mutation in the learned protein space.
+
+\subsection{Combined Representations}
+
+Additional experiments evaluated hybrid feature sets combining pLM-derived mutation scores, delta embeddings, and gnomAD population frequencies. These combinations were designed to assess whether population genetics signals improve predictive performance beyond sequence-derived representations alone.
+
+\subsection{Dataset Construction}
+
+The dataset was organized at the gene level, with each sample corresponding to a single human missense variant represented by the tuple \textbf{(gene, protein position, wild-type amino acid, mutant amino acid)}, together with a binary pathogenicity label.
+
+To enable Protein Language Model (pLM) inference, full protein reference sequences were retrieved from UniProt \cite{uniprot} database and matched to annotated variants using protein-level coordinates obtained during variant annotation. These protein sequences provided the sequential context required for mutation scoring and embedding extraction.
+
+Processed datasets were serialized in Apache Parquet format to ensure efficient storage and reproducibility, while intermediate pre-processing and data integration steps were implemented using the Python Pandas ecosystem.
+
+\subsection{Experimental Settings}
+
+This study focuses on low-data regimes commonly observed in genes associated with rare diseases. Experiments were therefore designed to evaluate the ability of pre-trained Protein Language Models (pLMs) to infer mutation effects without supervised task-specific training.
+
+In the zero-shot setting, pathogenicity-related functional impact was inferred directly from pLM-derived mutation scores, such as log-ratio scores and delta-embedding representations. No downstream classifiers or fine-tuning procedures were employed. Instead, the intrinsic representations learned by the pLMs were evaluated against ClinVar pathogenicity annotations.
+
+To simulate realistic sparse-annotation scenarios, analyses were conducted independently for genes with limited numbers of clinically annotated missense variants. This low-data per-gene evaluation emphasizes the generalization capability of pLMs under restricted annotation availability, avoiding large pooled multi-gene supervised training settings.
+
+\subsection{Evaluation Metrics}
+
+Model performance was evaluated using metrics appropriate for imbalanced pathogenicity prediction tasks, including ROC-AUC, PR-AUC, accuracy, F1-score, and Matthews Correlation Coefficient (MCC). Whenever possible, stratified splits were used to preserve class balance across training and evaluation sets.
+
+\subsection{Computational Environment}
+
+All pre-processing and experiments were implemented in Python using Pandas for data manipulation, NumPy for numerical operations, Hugging Face Transformers for pLM access, and scikit-learn for evaluation. Variant annotation was performed with snpEff in a Bioconda-managed computational environment.
 
 \bibliographystyle{sbc}
 \bibliography{references}
