@@ -42,3 +42,6 @@ dependencies:
       - accelerate
       - datasets
       - biopython
+
+  - requests
+  - urllib3

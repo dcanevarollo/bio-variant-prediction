@@ -2,6 +2,7 @@ from cyvcf2 import VCF
 from pathlib import Path
 from tqdm import tqdm
 from pandas import DataFrame
+from Bio.Data.IUPACData import protein_letters_3to1
 import pandas as pd
 import re
 
@@ -43,30 +44,30 @@ def parse_clinvar(vcf_path: Path) -> DataFrame:
             if annotation != "missense_variant":
                 continue
 
-            gene = fields[3]
+            # keep only protein-coding transcripts
+            transcript_biotype = fields[7]
+            if transcript_biotype != "protein_coding":
+                continue
 
-            # HGVS protein notation
-            # Usually field 10 in snpEff ANN
+            gene = fields[3]
+            transcript_id = fields[6].split(".")[0]
             hgvs_p = fields[10]
 
             if not hgvs_p.startswith("p."):
                 continue
 
             # Example: p.Arg117His
-            try:
-                match = re.match(
-                    r"p\.([A-Za-z]{1,3})(\d+)([A-Za-z]{1,3})",
-                    hgvs_p
-                )
+            match = re.match(
+                r"p\.([A-Za-z]{1,3})(\d+)([A-Za-z]{1,3})",
+                hgvs_p
+            )
 
-                if match is None:
-                    continue
-
-                aa_wt = match.group(1)
-                pos_protein = int(match.group(2))
-                aa_mut = match.group(3)
-            except:
+            if match is None:
                 continue
+
+            aa_wt = protein_letters_3to1.get(match.group(1))
+            pos_protein = int(match.group(2))
+            aa_mut = protein_letters_3to1.get(match.group(3))
 
             records.append({
                 "id": variant.ID,
@@ -75,6 +76,7 @@ def parse_clinvar(vcf_path: Path) -> DataFrame:
                 "ref": variant.REF,
                 "alt": ",".join(variant.ALT),
                 "gene": gene,
+                "transcript_id": transcript_id,
                 "pos_protein": pos_protein,
                 "aa_wt": aa_wt,
                 "aa_mut": aa_mut,
@@ -129,8 +131,6 @@ def parse_gnomad(
             "pos_genomic": variant.POS,
             "ref": variant.REF,
             "alt": alt,
-            "filter": variant.FILTER,
-            "qual": variant.QUAL,
             "af": af,
             "ac": ac,
             "an": an

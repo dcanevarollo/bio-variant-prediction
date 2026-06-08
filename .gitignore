@@ -230,3 +230,6 @@ snpEff*
 
 # VS Code
 .vscode
+
+# JetBrains
+.idea
