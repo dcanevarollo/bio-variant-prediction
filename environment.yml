@@ -45,3 +45,4 @@ dependencies:
 
   - requests
   - urllib3
+  - torch
