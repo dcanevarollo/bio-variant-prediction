@@ -32,9 +32,13 @@ dependencies:
 
   # Deep Learning
   - pytorch
+  - torch
 
   # Utilities
   - pip
+  - requests
+  - urllib3
+  - pyarrow
 
   - pip:
       - transformers
@@ -42,7 +46,3 @@ dependencies:
       - accelerate
       - datasets
       - biopython
-
-  - requests
-  - urllib3
-  - torch

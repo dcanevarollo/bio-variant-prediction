@@ -88,6 +88,7 @@ def parse_clinvar(vcf_path: Path) -> DataFrame:
 
     return pd.DataFrame(records)
 
+
 def parse_gnomad(
     vcf_path: Path,
     chrom: str | None = None,

@@ -12,6 +12,7 @@ from urllib3 import Retry
 
 ENSEMBL_URL = f"https://rest.ensembl.org"
 
+
 def annotate_with_snpeff(input_vcf: Path, output_vcf: Path, heap="16g") -> Path:
     if output_vcf.exists() or output_vcf.with_suffix(output_vcf.suffix + ".gz").exists():
         print(f"{output_vcf.name} already annotated. Skipping new annotation.")
@@ -37,6 +38,7 @@ def annotate_with_snpeff(input_vcf: Path, output_vcf: Path, heap="16g") -> Path:
 
     return output_vcf
 
+
 def index(vcf_path: Path) -> None:
     if vcf_path.with_suffix(vcf_path.suffix + ".tbi").exists():
         print(f"{vcf_path.name} already indexed. Skipping new index.")
@@ -46,6 +48,7 @@ def index(vcf_path: Path) -> None:
         ["tabix", "-p", "vcf", str(vcf_path)],
         check=True
     )
+
 
 def fetch_protein_sequences(transcripts_ids: list[str], batch_size = 100) -> DataFrame:
     session = requests.Session()
@@ -97,6 +100,7 @@ def fetch_protein_sequences(transcripts_ids: list[str], batch_size = 100) -> Dat
             })
 
     return pd.DataFrame(records)
+
 
 def __chunks(data: list[str], batch_size: int) -> Generator[list[str], None, None]:
     for i in range(0, len(data), batch_size):

@@ -13,6 +13,7 @@ __GNOMAD_EXOMES_URL = (
 )
 __CHUNK_SIZE = 1024 * 1024 # 1 MiB
 
+
 def download_clinvar() -> Path:
     output_file, exists = __get_output_file("clinvar.vcf.gz")
 
@@ -25,6 +26,7 @@ def download_clinvar() -> Path:
         ], check=True)
 
     return output_file
+
 
 def download_gnomad() -> Path:
     output_file, exists = __get_output_file("gnomad.exomes.chr1.vcf.bgz", INTERIM_DATA_DIR)
@@ -51,6 +53,7 @@ def download_gnomad() -> Path:
                     progress_bar.update(len(chunk))
 
     return output_file
+
 
 def __get_output_file(output_file_name: str, output_dir=RAW_DATA_DIR) -> tuple[Path, bool]:
     output_dir.mkdir(parents=True, exist_ok=True)
