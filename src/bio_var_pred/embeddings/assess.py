@@ -1,3 +1,4 @@
+import re
 from pandas import DataFrame
 
 
@@ -35,3 +36,29 @@ def get_windowed_sequence(seq: str, pos_protein: int, window_size = 1024) -> tup
     new_pos_protein = pos_0based - start + 1
 
     return windowed_seq, new_pos_protein
+
+
+def to_prott5_sequence(seq: str) -> str:
+    """
+    Convert a contiguous amino-acid string to the space-separated format
+    expected by the Prot-T5 tokenizer, replacing any rare amino acids
+    (B, Z, U, O) with 'X' as recommended in the ProtTrans documentation.
+    """
+    seq = re.sub(r"[BZOUJ]", "X", seq)  # normalize rare / ambiguous residues
+    return " ".join(list(seq))
+
+
+def mask_position(seq: str, pos_protein: int) -> str:
+    """
+    Replace the residue at `pos_1based` (1-based) in a space-separated
+    sequence with the T5 sentinel token <extra_id_0>.
+
+    Example
+    -------
+    seq_spaced = "M A G R S"
+    pos_1based = 3
+    → "M A <extra_id_0> R S"
+    """
+    tokens = seq.split(" ")
+    tokens[pos_protein - 1] = "<extra_id_0>"
+    return " ".join(tokens)
