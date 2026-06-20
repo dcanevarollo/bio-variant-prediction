@@ -2,8 +2,10 @@ from typing import Optional
 
 import torch
 import torch.nn.functional as F
+import numpy as np
 from torch import device, Tensor
-from transformers import EsmForMaskedLM, EsmTokenizer, T5ForConditionalGeneration, T5Tokenizer, PreTrainedModel
+from transformers import EsmForMaskedLM, EsmTokenizer, T5ForConditionalGeneration, T5Tokenizer, PreTrainedModel, \
+    AutoTokenizer, EsmModel, T5EncoderModel
 
 from bio_var_pred.embeddings.assess import get_windowed_sequence, to_prott5_sequence, mask_position
 
@@ -106,3 +108,46 @@ def compute_prott5_log_ratio(
         return None
 
     return (log_probs[mut_id] - log_probs[wt_id]).item()
+
+
+@torch.no_grad()
+def get_residue_embedding(
+    seq: str,
+    pos_1based: int,
+    model: EsmModel | T5EncoderModel |  PreTrainedModel,
+    tokenizer: AutoTokenizer,
+    device: device,
+    layer: int = 33
+) -> np.ndarray:
+    """
+    Run a single forward pass and return the hidden-state vector
+    at `pos_1based` from `layer`.
+
+    ESM-2 tokenizer prepends <cls> (index 0) and appends <eos>,
+    so the residue at position i (1-based) maps to token index i
+    in the hidden state tensor.
+    """
+    inputs = tokenizer(seq, return_tensors="pt", add_special_tokens=True)
+    inputs = {k: v.to(device) for k, v in inputs.items()}
+
+    output_hidden_states = isinstance(model, T5EncoderModel)
+    outputs = model(**inputs, output_hidden_states=output_hidden_states)
+
+    assert outputs.hidden_states is not None, (
+        "hidden_states is None — output_hidden_states was not honoured. "
+        "Check transformers version / model config."
+    )
+    assert len(outputs.hidden_states) > layer, (
+        f"hidden_states has only {len(outputs.hidden_states)} elements, "
+        f"cannot index layer={layer}"
+    )
+
+    # hidden_states: tuple of (n_layers + 1) tensors, shape [1, seq_len+2, hidden_size]
+    # Index 0 = embedding layer; index 1..33 = transformer layers
+    hidden = outputs.hidden_states[layer]  # shape: [1, seq_len+2, 1280]
+
+    # Token index: <cls>=0, residue_1=1, ..., residue_n=n, <eos>=n+1
+    token_idx = pos_1based  # 1-based position maps directly to token index
+
+    embedding = hidden[0, token_idx, :].cpu().float().numpy()  # shape: [1280]
+    return embedding

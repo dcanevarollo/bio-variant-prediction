@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from pandas import DataFrame
 from pathlib import Path
 
@@ -27,3 +28,16 @@ def save_checkpoint(checkpoint_path: Path, batch_results: list, df: DataFrame) -
     print(f"\tSaved checkpoint: {len(df)} variants accumulated")
 
     return df
+
+
+def restore_np_checkpoint(checkpoint_path: Path, n: int) -> tuple[list, int]:
+    if checkpoint_path.exists():
+        delta_norms = np.load(checkpoint_path, allow_pickle=True).tolist()
+        start_idx = len(delta_norms)
+        print(f"Resuming from checkpoint: {start_idx}/{n} variants processed")
+    else:
+        delta_norms = []
+        start_idx = 0
+        print("Starting fresh inference")
+
+    return delta_norms, start_idx
