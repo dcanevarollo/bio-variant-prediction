@@ -271,17 +271,20 @@
   publisher={Cold Spring Harbor Laboratory}
 }
 
-@article {prost5,
-	author = {Heinzinger, Michael and Weissenow, Konstantin and Sanchez, Joaquin Gomez and Henkel, Adrian and Steinegger, Martin and Rost, Burkhard},
-	title = {ProstT5: Bilingual Language Model for Protein Sequence and Structure},
-	elocation-id = {2023.07.23.550085},
-	year = {2023},
-	doi = {10.1101/2023.07.23.550085},
-	publisher = {Cold Spring Harbor Laboratory},
-	abstract = {Advanced Artificial Intelligence (AI) enabled large language models (LLMs) to revolutionize Natural Language Processing (NLP). Their adaptation to protein sequences spawned the development of powerful protein language models (pLMs). Concurrently, AlphaFold2 broke through in protein structure prediction. For the first time, we can now systematically and comprehensively explore the dual nature of proteins that act and exist as three-dimensional (3D) machines and evolve in linear strings of one-dimensional (1D) sequences. Here, we leverage pLMs to simultaneously model both modalities by combining 1D sequences with 3D structure in one generic model. For this, we encode protein structures as token sequences using the 3Di-alphabet introduced by Foldseek. The resulting {\textquotedblleft}structure-sequence{\textquotedblright} representation is processed by a pLM to extract features and patterns. Toward this end, we constructed a non-redundant dataset from AlphaFoldDB and fine-tuned an existing pLM (ProtT5) to translate between 3Di and amino acid sequences. As a proof-of-concept for our novel approach, dubbed Protein structure-sequence T5 (ProstT5), we showed improved performance for subsequent prediction tasks, and for {\textquotedblleft}inverse folding{\textquotedblright}, namely the generation of novel protein sequences adopting a given structural scaffold ({\textquotedblleft}fold{\textquotedblright}). Our work showcased the potential of pLMs to tap into the information-rich protein structure revolution fueled by AlphaFold2. It paves the way for the development of tools optimizing the integration of this vast 3D structure data resource, opening new research avenues in the post AlphaFold2 era. We released our model at https://github.com/mheinzinger/ProstT5.Competing Interest StatementThe authors have declared no competing interest.1Done-dimensional (string such as secondary structure)3Dthree-dimensional (coordinates)3Di1D-strings representing protein 3D structure (taken from Foldseek [1])AFDBAlphaFold Protein Structure DatabaseAIArtificial IntelligenceCATHhierarchical classification of protein 3D structures in Class, Architecture, Topology and Homologous superfamilyCNNconvolutional neural networkEATEmbedding-based Annotation Transfer; embeddings fixed-size vectors derived from pre-trained pLMsLLMlarge language modelMLmachine learning (here we drop the distinction between ML and AI considering existing delineations more or less arbitrary for our ends)pLMprotein Language ModelSOTAstate-of-the-art.},
-	URL = {https://www.biorxiv.org/content/early/2023/07/25/2023.07.23.550085},
-	eprint = {https://www.biorxiv.org/content/early/2023/07/25/2023.07.23.550085.full.pdf},
-	journal = {bioRxiv}
+@ARTICLE{prottrans,
+  title    = "{ProtTrans}: Toward Understanding the Language of Life Through
+              Self-Supervised Learning",
+  author   = "Elnaggar, Ahmed and Heinzinger, Michael and Dallago, Christian
+              and Rehawi, Ghalia and Wang, Yu and Jones, Llion and Gibbs, Tom
+              and Feher, Tamas and Angerer, Christoph and Steinegger, Martin
+              and Bhowmik, Debsindhu and Rost, Burkhard",
+  journal  = "IEEE Trans Pattern Anal Mach Intell",
+  volume   =  44,
+  number   =  10,
+  pages    = "7112--7127",
+  month    =  oct,
+  year     =  2022,
+  doi      = "10.1109/TPAMI.2021.3095381"
 }
 
 @ARTICLE{stein,
@@ -391,12 +394,12 @@
   language = "en"
 }
 
-@article{vasquez,
-  title = {Evaluating ML-based continuous predictors for missense variant pathogenicity},
+@masterthesis{vasquez,
+  title  = {Evaluating ML-based continuous predictors for missense variant pathogenicity},
   author = {Díaz Vásquez, Aitana},
-  year = {2025},
-  url = {https://hdl.handle.net/10230/72288},
-  journal = ""
+  school = {Universitat Pompeu Fabra (UPF)},
+  year   = {2025},
+  url    = {https://hdl.handle.net/10230/72288}
 }
 
 @article{snpEff,
@@ -463,18 +466,29 @@
   language = "en"
 }
 
-@article{uniprot,
-    author = {The UniProt Consortium },
-    title = {UniProt: the Universal Protein Knowledgebase in 2025},
+@article{ensembl,
+    author = {Dyer, Sarah C and Austine-Orimoloye, Olanrewaju and Azov, Andrey G and Barba, Matthieu and Barnes, If and Barrera-Enriquez, Vianey Paola and Becker, Arne and Bennett, Ruth and Beracochea, Martin and Berry, Andrew and Bhai, Jyothish and Bhurji, Simarpreet Kaur and Boddu, Sanjay and Branco Lins, Paulo R and Brooks, Lucy and Ramaraju, Shashank Budhanuru and Campbell, Lahcen I and Martinez, Manuel Carbajo and Charkhchi, Mehrnaz and Cortes, Lucas A and Davidson, Claire and Denni, Sukanya and Dodiya, Kamalkumar and Donaldson, Sarah and El Houdaigui, Bilal and El Naboulsi, Tamara and Falola, Oluwadamilare and Fatima, Reham and Genez, Thiago and Martinez, Jose Gonzalez and Gurbich, Tatiana and Hardy, Matthew and Hollis, Zoe and Hunt, Toby and Kay, Mike and Kaykala, Vinay and Lemos, Diana and Lodha, Disha and Mathlouthi, Nourhen and Merino, Gabriela Alejandra and Merritt, Ryan and Mirabueno, Louisse Paola and Mushtaq, Aleena and Hossain, Syed Nakib and Pérez-Silva, José G and Perry, Malcolm and Piližota, Ivana and Poppleton, Daniel and Prosovetskaia, Irina and Raj, Shriya and Salam, Ahamed Imran Abdul and Saraf, Shradha and Saraiva-Agostinho, Nuno and Sinha, Swati and Sipos, Botond and Sitnik, Vasily and Steed, Emily and Suner, Marie-Marthe and Surapaneni, Likhitha and Sutinen, Kyösti and Tricomi, Francesca Floriana and Tsang, Ian and Urbina-Gómez, David and Veidenberg, Andres and Walsh, Thomas A and Willhoft, Natalie L and Allen, Jamie and Alvarez-Jarreta, Jorge and Chakiachvili, Marc and Cheema, Jitender and da Rocha, Jorge Batista and De Silva, Nishadi H and Giorgetti, Stefano and Haggerty, Leanne and Ilsley, Garth R and Keatley, Jon and Loveland, Jane E and Moore, Benjamin and Mudge, Jonathan M and Naamati, Guy and Tate, John and Trevanion, Stephen J and Winterbottom, Andrea and Flint, Bethany and Frankish, Adam and Hunt, Sarah E and Finn, Robert D and Freeberg, Mallory A and Harrison, Peter W and Martin, Fergal J and Yates, Andrew D},
+    title = {Ensembl 2025},
     journal = {Nucleic Acids Research},
     volume = {53},
     number = {D1},
-    pages = {D609-D617},
+    pages = {D948-D957},
     year = {2025},
     month = {01},
-    abstract = {The aim of the UniProt Knowledgebase (UniProtKB; https://www.uniprot.org/) is to provide users with a comprehensive, high-quality and freely accessible set of protein sequences annotated with functional information. In this publication, we describe ongoing changes to our production pipeline to limit the sequences available in UniProtKB to high-quality, non-redundant reference proteomes. We continue to manually curate the scientific literature to add the latest functional data and use machine learning techniques. We also encourage community curation to ensure key publications are not missed. We provide an update on the automatic annotation methods used by UniProtKB to predict information for unreviewed entries describing unstudied proteins. Finally, updates to the UniProt website are described, including a new tab linking protein to genomic information. In recognition of its value to the scientific community, the UniProt database has been awarded Global Core Biodata Resource status.},
+    abstract = {Ensembl (www.ensembl.org) is an open platform integrating publicly available genomics data across the tree of life with a focus on eukaryotic species related to human health, agriculture and biodiversity. This year has seen a continued expansion in the number of species represented, with \&gt;4800 eukaryotic and \&gt;31 300 prokaryotic genomes available. The new Ensembl site, currently in beta, has continued to develop, currently holding \&gt;2700 eukaryotic genome assemblies. The new site provides genome, gene, transcript, homology and variation views, and will replace the current Rapid Release site; this represents a key step towards provision of a single integrated Ensembl site. Additional activities have included developing improved regulatory annotation for human, mouse and agricultural species, and expanding the Ensembl Variant Effect Predictor tool. To learn more about Ensembl, help and documentation are available along with an extensive training program that can be accessed via our training pages.},
     issn = {1362-4962},
-    doi = {10.1093/nar/gkae1010},
-    url = {https://doi.org/10.1093/nar/gkae1010},
-    eprint = {https://academic.oup.com/nar/article-pdf/53/D1/D609/60719276/gkae1010.pdf},
+    doi = {10.1093/nar/gkae1071},
+    url = {https://doi.org/10.1093/nar/gkae1071},
+    eprint = {https://academic.oup.com/nar/article-pdf/53/D1/D948/60949583/gkae1071.pdf},
+}
+
+@inproceedings{meier,
+  title     = "Language models enable zero-shot prediction of the effects of
+               mutations on protein function",
+  author    = "Meier, Joshua and Rao, Roshan and Verkuil, Robert and Liu,
+               Jason and Sercu, Tom and Rives, Alexander",
+  booktitle = "Advances in Neural Information Processing Systems",
+  volume    =  34,
+  pages     = "29287--29303",
+  year      =  2021
 }
