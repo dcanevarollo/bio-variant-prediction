@@ -148,6 +148,7 @@ All pre-processing and inference were implemented in Python using Pandas for dat
 \section{Results and Discussion}
 
 \subsection{Overall Comparison}
+\label{sec:overall}
 
 Table~\ref{tab:comparative} summarizes the median ROC-AUC and PR-AUC, evaluated per gene over the evaluable gene set, for the four representation--model combinations considered in this study.
 
@@ -189,6 +190,24 @@ A plausible, though untested, explanation is that the final layer of ESM-2 is sp
 \subsection{Limitations}
 
 The analysis presented here is restricted to gnomAD chromosome 1 exome data, which limits the size and representativeness of the evaluable gene set. ClinVar is also known to be subject to ascertainment bias with respect to allele rarity \cite{mikhail}, which may affect the pathogenicity label distribution against which all representations were scored. Finally, a direct paired significance test between ESM-2 log-ratio and ESM-2 delta-norm --- the two representations with the largest performance gap in this study --- was not performed; additional analyses, such as performance stratified by the number of variants per gene and correlations with gene-level covariates, were also left for future work.
+
+\section{Conclusions}
+
+This paper compared two zero-shot mutation representation strategies --- log-ratio scores derived from model output probabilities, and delta-embedding norms derived from hidden-state shifts --- across two pretrained protein language models, ESM-2 and Prot-T5, for predicting the pathogenicity-linked functional impact of human missense variants in a per-gene low-data regime. Using ClinVar as the source of pathogenicity labels and gnomAD chromosome 1 to define the dataset's scope, all four representation--model combinations were evaluated under an explicit per-gene evaluability criterion, without any supervised fine-tuning or downstream classifier. The ESM-2 log-ratio representation clearly outperformed every other combination (median ROC-AUC of 0.951), while no delta-embedding score, for either model, approached this level of performance. Notably, the relative ranking between the two representation families was not consistent across models --- log-ratio dominated delta-norm for ESM-2, while the opposite held for Prot-T5 --- indicating that the effectiveness of a given representation strategy depends on the specific architecture it is extracted from, rather than being a fixed property of the representation itself.
+
+The most unexpected result was that the ESM-2 delta-embedding score achieved a below-chance median ROC-AUC, with benign variants tending to produce a larger embedding shift than pathogenic ones at the model's final layer. After ruling out an indexing artifact as the cause, this result was interpreted as a genuine architectural contrast rather than a failure of the delta-embedding approach: the same general strategy behaves very differently depending on the underlying model, which is itself an informative finding for future work on embedding-based variant scoring.
+
+A caveat applies to all comparisons involving log-ratio scores across the two models: because ESM-2's log-ratio score is computed with the wild-type residue visible in context, while Prot-T5's is computed under masking, the two scores are not extracted under equivalent conditions and were therefore never compared in absolute magnitude in this study, only through ranking-based metrics evaluated independently for each model. This asymmetry should be kept in mind when interpreting any claim of one model being intrinsically ``better'' than the other for this task, since part of the observed gap may reflect the scoring protocol rather than the underlying representation quality alone.
+
+Overall, these results suggest that the choice of mutation representation and the choice of protein language model interact substantially, and that neither factor alone is sufficient to predict zero-shot performance in low-data, per-gene pathogenicity prediction. The limitations and directions for future work discussed in the previous sections --- in particular, extending beyond chromosome 1, incorporating allele frequency as a model feature, and evaluating intermediate model layers --- remain the most direct paths toward a more complete understanding of this comparison.
+
+\section{Future Work}
+
+Several directions remain open beyond the scope of this work. First, and most directly tied to the scope limitation already noted in the Abstract and in Results and Discussion, extending the analysis beyond gnomAD chromosome 1 would allow the evaluable gene set to grow and would remove the chromosome-specific constraints on allele-frequency-derived statistics. Second, incorporating population allele frequency as an explicit model feature --- rather than as the single-feature baseline considered here --- in hybrid representations that combine pLM-derived scores with $\log\_AF$ is a natural extension, particularly given that allele frequency and pLM-based scores capture different and potentially complementary sources of evidence.
+
+Third, the below-chance result obtained for ESM-2 delta-norm motivates evaluating intermediate layers of the model, rather than only the final layer used here, since the final layer's proximity to the masked-token-prediction objective may explain why it does not behave as a severity proxy. Fourth, a direct paired significance test between ESM-2 log-ratio and ESM-2 delta-norm --- the comparison with the largest performance gap in this study, but the one for which no formal test was computed --- together with a resolution of the small gene-count discrepancy observed across representations (Section~\ref{sec:overall}), would close the most relevant gaps in the statistical analysis presented here. The additional stratified and correlational analyses mentioned as limitations above also remain natural candidates for a more complete follow-up.
+
+Finally, this work intentionally restricts its scope to zero-shot scoring, without any supervised component. Evaluating these same representations as input features to lightweight supervised classifiers in a few-shot, per-gene regime --- an approach considered during the design of this study but excluded to keep the comparison strictly zero-shot --- could clarify whether the gap between log-ratio and delta-embedding representations persists, narrows, or reverses once even a small amount of gene-specific supervision is introduced.
 
 \bibliographystyle{sbc}
 \bibliography{references}
