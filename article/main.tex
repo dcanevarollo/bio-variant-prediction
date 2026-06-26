@@ -34,7 +34,7 @@ In this context, population genomics databases have become key resources for pat
 
 On another front, advances in Artificial Intelligence (AI) have enabled Large Language Models (LLMs) to revolutionize Natural Language Processing (NLP). Their adaptation to protein sequences has led to the development of powerful protein Language Models (pLMs) \cite{prottrans}. These models have been used to predict the impact of missense mutations in human proteins, including architectures such as Evolutionary Scale Modeling (ESM-2) \cite{esm2} and Prot-T5 \cite{prottrans}, in tasks ranging from protein stability to ``variant effect'' prediction related to phenotypes.
 
-However, although these pLMs are promising, few systematic studies evaluate specific representation strategies under scenarios of low data availability per gene, using ClinVar as a label source and gnomAD as a population filter \cite{stein}. Representation choices --- such as pLM log-ratio scores versus delta-embedding distances --- may have a larger impact on performance than the choice of the pLM itself \cite{alirezaie}, and the relative contribution of population-level features such as gnomAD allele frequency to this comparison remains comparatively underexplored. Moreover, for many genes associated with rare diseases, the number of experimentally or clinically annotated variants is small, which reinforces the need to study zero-shot and low-data settings \cite{sharo}.
+However, although these pLMs are promising, few systematic studies evaluate specific representation strategies under scenarios of low data availability per gene, using ClinVar as a label source and gnomAD as a population filter \cite{stein}. In this work, we hypothesize that representation choices — such as pLM log-ratio scores versus delta-embedding distances — may have a larger impact on performance than the choice of the pLM itself, and that the relative contribution of population-level features such as gnomAD allele frequency to this comparison remains comparatively underexplored. Moreover, for many genes associated with rare diseases, the number of experimentally or clinically annotated variants is small, which reinforces the need to study zero-shot and low-data settings \cite{sharo}.
 
 In this light, this paper aims to evaluate and compare zero-shot representation strategies based on protein Language Models for predicting the functional impact linked to the pathogenicity of human missense variants. ClinVar is used as the source of pathogenicity labels, and gnomAD is used both to assign population allele frequencies to each variant and to define the chromosome-restricted scope of the current analysis (chromosome 1), focusing especially on low-data scenarios defined at the gene level. Two pLMs --- ESM-2 and Prot-T5 --- and two mutation representations --- log-ratio scores derived from model output probabilities, and delta-embedding distances derived from hidden-state shifts --- are compared under an explicit per-gene evaluability criterion, with no supervised fine-tuning or downstream classifiers involved at any stage.
 
@@ -68,15 +68,14 @@ For each retained variant, the following information was extracted: chromosomal 
 
 To reduce label noise, ClinVar annotations were grouped into binary classes: pathogenic and likely pathogenic were assigned to the pathogenic class, whereas benign and likely benign were assigned to the benign class. Variants labeled as uncertain significance, conflicting interpretations, or lacking clear review criteria were excluded from the primary analyses.
 
-After missense filtering and binary label assignment, the resulting dataset comprised 76,990 variants across 8,297 unique genes.
-
 \subsection{Sequence Retrieval and Quality Control}
 
 Full-length protein reference sequences were retrieved from the Ensembl REST API \cite{ensembl} using the transcript identifier annotated for each variant (\texttt{ENST} format) and matched to variant records using the protein-level coordinates obtained during functional annotation. Sequence retrieval succeeded for 97.12\% of annotated transcripts; variants for which no protein sequence could be retrieved were discarded.
 
 Two additional quality-control steps were applied before downstream representation extraction. First, variants whose annotated protein position exceeded the length of the retrieved reference sequence were removed (132 variants, 0.17\% of the dataset). Second, the wild-type amino acid reported by ClinVar/snpEff was cross-checked against the residue present in the retrieved Ensembl sequence at the annotated one-based position; variants for which these did not match were discarded (998 variants, approximately 1.28\% of the dataset), since such a mismatch indicates an unresolved discrepancy between the genomic annotation and the reference transcript used for sequence retrieval rather than a genuine variant.
 
-Sequences containing the character ``X'' (unknown or non-standard amino acid) were not filtered at this stage; this filtering was applied downstream, immediately before protein language model inference (see Section~\ref{sec:pseq}).
+Sequences containing the character "X" (unknown or non-standard amino acid) were not filtered at this stage; this filtering was applied downstream, immediately before protein language model inference.
+After all quality-control steps described above, the resulting dataset comprised 76,990 variants across 8,297 unique genes.
 
 \subsection{Population Frequency Integration}
 
@@ -126,6 +125,7 @@ For Prot-T5 specifically, the delta-embedding representation was extracted diffe
 Token-to-residue index alignment differs between the two models due to differences in special tokens: for ESM-2, the \texttt{<cls>} token occupies index 0, so the one-based protein position $i$ maps to index $i$ in the hidden-state tensor; for Prot-T5, no special token precedes the sequence (only an end-of-sequence token follows it), so position $i$ maps to index $i - 1$. Both index mappings were validated on a sample of variants by confirming that the residue retrieved at the computed embedding-extraction index matched the annotated wild-type amino acid.
 
 \subsection{Dataset Construction}
+\label{sec:dataset}
 
 The dataset was organized at the gene level, with each sample corresponding to a single human missense variant represented by the tuple \textbf{(gene, protein position, wild-type amino acid, mutant amino acid)}, together with a binary pathogenicity label. As described above, full protein reference sequences were retrieved from the Ensembl REST API \cite{ensembl} using transcript identifiers, rather than from UniProt.
 
@@ -160,7 +160,7 @@ Table~\ref{tab:comparative} summarizes the median ROC-AUC and PR-AUC, evaluated 
 \hline
 \textbf{Representation} & \textbf{Median ROC-AUC} & \textbf{Median PR-AUC} & \textbf{Genes} \\
 \hline
-ESM-2 log-ratio     & \textbf{0.951} & \textbf{0.983} & 2,253 \\
+ESM-2 log-ratio     & \textbf{0.951} & \textbf{0.983} & 2,252 \\
 Prot-T5 delta-norm  & 0.635          & 0.692          & 2,252 \\
 Prot-T5 log-ratio   & 0.484          & 0.565          & 2,252 \\
 ESM-2 delta-norm    & 0.450          & 0.591          & 2,252 \\
@@ -168,13 +168,15 @@ ESM-2 delta-norm    & 0.450          & 0.591          & 2,252 \\
 \end{tabular}
 \end{table}
 
-(Evaluable gene counts differ by a single gene across representations, 2,253 versus 2,252, due to a small number of genes with a missing score for at least one representation; this minor discrepancy was not investigated further, and it is a known limitation.)
+(Of the 2,253 genes meeting the evaluability criterion defined in Section \ref{sec:dataset}, scores were available for all four representations for 2,252; the remaining gene, missing a score for at least one representation, was excluded from this comparison.)
 
-The ESM-2 log-ratio representation clearly outperforms all other combinations, and no delta-embedding score, for either model, approaches it. Interestingly, the relative ranking of log-ratio versus delta-embedding is not consistent across models: for ESM-2, log-ratio greatly outperforms delta-norm, whereas for Prot-T5, delta-norm outperforms log-ratio. Both delta-norm comparisons (Prot-T5 delta-norm vs.\ Prot-T5 log-ratio, and ESM-2 delta-norm vs.\ Prot-T5 delta-norm) are statistically significant under a paired Wilcoxon signed-rank test ($p = 8.23\times10^{-55}$ and $p = 6.80\times10^{-104}$, respectively). This suggests that the relative merit of probability-derived versus embedding-shift-derived scores depends on the specific model architecture, rather than being an intrinsic property of either representation family on its own.
+The ESM-2 log-ratio representation clearly outperforms all other combinations, and no delta-embedding score, for either model, approaches it. Interestingly, the relative ranking of log-ratio versus delta-embedding is not consistent across models: for ESM-2, log-ratio greatly outperforms delta-norm, whereas for Prot-T5, delta-norm outperforms log-ratio. Both delta-norm comparisons (Prot-T5 delta-norm vs.\ Prot-T5 log-ratio, and ESM-2 delta-norm vs.\ Prot-T5 delta-norm) are statistically significant under a paired Wilcoxon signed-rank test ($p = 8.23\times10^{-55}$ and $p = 6.80\times10^{-104}$, respectively). A direct paired test between ESM-2 log-ratio and ESM-2 delta-norm --- the pair with the largest performance gap in this study --- was not formally computed (see Section \ref{sec:limitations}); given the magnitude of the median difference between the two (0.951 versus 0.450), however, a formal test would be unlikely to alter the qualitative conclusion for this pair. Taken together, this suggests that the relative merit of probability-derived versus embedding-shift-derived scores depends on the specific model architecture, rather than being an intrinsic property of either representation family on its own.
 
 \subsection{The ESM-2 Delta-Embedding Result: A Below-Chance Median}
 
 The most unexpected result in this study is that ESM-2 delta-norm achieves a median ROC-AUC of 0.450 --- below the level expected by chance. Figure~\ref{fig:esm2delta-dist} shows why this median is misleading if read as a single number: rather than a uniformly weak signal, the per-gene ROC-AUC distribution is concentrated at three distinct points --- near 0.0, near 0.5, and near 1.0 --- indicating that the representation is strongly correct for some genes, strongly anti-correlated for others, and uninformative for the rest.
+
+A natural concern is whether this dispersed, multi-peaked shape simply reflects the coarse set of ROC-AUC values achievable with small per-gene sample sizes --- the median number of variants per gene in the evaluable set is 3, only slightly above the evaluability floor of 5 variants spanning both classes (Section \ref{sec:dataset}) --- rather than genuine heterogeneity in representation quality across genes. If this discreteness were the dominant explanation, a similarly dispersed, multi-peaked distribution would be expected for any representation evaluated over the same genes and the same per-gene sample sizes, regardless of its discriminative quality. Figure \ref{fig:esm2-logratio-dist} shows the per-gene ROC-AUC and PR-AUC distributions for the ESM-2 log-ratio representation, evaluated over the same evaluable gene set. In contrast to ESM-2 delta-norm, the log-ratio distribution is strongly unimodal and concentrated near 1.0, with a comparatively short left tail and no corresponding accumulation of genes near 0.0 or 0.5. Since both representations are scored under the same per-gene sample-size constraints, this contrast indicates that the dispersed, multi-peaked shape observed for ESM-2 delta-norm is not primarily a sampling artifact, and instead reflects genuinely heterogeneous behavior of this representation across genes.
 
 \begin{figure}[ht]
 \centering
@@ -183,11 +185,19 @@ The most unexpected result in this study is that ESM-2 delta-norm achieves a med
 \label{fig:esm2delta-dist}
 \end{figure}
 
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\linewidth]{fig_esm2_auc_distributions.pdf}
+\caption{Per-gene distribution of ROC-AUC (left) and PR-AUC (right) for the ESM-2 log-ratio representation, shown for contrast with Figure \ref{fig:esm2delta-dist}.}
+\label{fig:esm2-logratio-dist}
+\end{figure}
+
 Before treating this as a genuine finding rather than an indexing bug, the embedding-extraction alignment was manually checked on a small sample of variants, confirming that the residue retrieved at the computed extraction index matched the annotated wild-type amino acid in all cases tested. A sign-inversion test ($1 - \text{ROC-AUC}$ per gene) yielded a median of 0.5502, indicating that benign variants tend to produce a \emph{larger} embedding shift than pathogenic ones at the final layer of ESM-2 --- the opposite of the design hypothesis that motivated the delta-embedding representation.
 
 A plausible, though untested, explanation is that the final layer of ESM-2 is specialized toward its masked-token-prediction pretraining objective and may capture local evolutionary plausibility of a residue rather than the structural severity of a substitution; an intermediate layer might preserve the pathogenic/benign distinction better, but this was not evaluated here and is left for future work. This result is reported as an informative contrast between architectures --- the same scoring strategy works very differently for ESM-2 and Prot-T5 --- rather than as a failure of the delta-embedding approach.
 
 \subsection{Limitations}
+\label{sec:limitations}
 
 The analysis presented here is restricted to gnomAD chromosome 1 exome data, which limits the size and representativeness of the evaluable gene set. ClinVar is also known to be subject to ascertainment bias with respect to allele rarity \cite{mikhail}, which may affect the pathogenicity label distribution against which all representations were scored. Finally, a direct paired significance test between ESM-2 log-ratio and ESM-2 delta-norm --- the two representations with the largest performance gap in this study --- was not performed; additional analyses, such as performance stratified by the number of variants per gene and correlations with gene-level covariates, were also left for future work.
 
@@ -205,7 +215,7 @@ Overall, these results suggest that the choice of mutation representation and th
 
 Several directions remain open beyond the scope of this work. First, and most directly tied to the scope limitation already noted in the Abstract and in Results and Discussion, extending the analysis beyond gnomAD chromosome 1 would allow the evaluable gene set to grow and would remove the chromosome-specific constraints on allele-frequency-derived statistics. Second, incorporating population allele frequency as an explicit model feature --- rather than as the single-feature baseline considered here --- in hybrid representations that combine pLM-derived scores with $\log\_AF$ is a natural extension, particularly given that allele frequency and pLM-based scores capture different and potentially complementary sources of evidence.
 
-Third, the below-chance result obtained for ESM-2 delta-norm motivates evaluating intermediate layers of the model, rather than only the final layer used here, since the final layer's proximity to the masked-token-prediction objective may explain why it does not behave as a severity proxy. Fourth, a direct paired significance test between ESM-2 log-ratio and ESM-2 delta-norm --- the comparison with the largest performance gap in this study, but the one for which no formal test was computed --- together with a resolution of the small gene-count discrepancy observed across representations (Section~\ref{sec:overall}), would close the most relevant gaps in the statistical analysis presented here. The additional stratified and correlational analyses mentioned as limitations above also remain natural candidates for a more complete follow-up.
+Third, the below-chance result obtained for ESM-2 delta-norm motivates evaluating intermediate layers of the model, rather than only the final layer used here, since the final layer's proximity to the masked-token-prediction objective may explain why it does not behave as a severity proxy. Fourth, a direct paired significance test between ESM-2 log-ratio and ESM-2 delta-norm --- the comparison with the largest performance gap in this study, but the one for which no formal test was computed --- would close the most relevant gap in the statistical analysis presented here. The additional stratified and correlational analyses mentioned as limitations above also remain natural candidates for a more complete follow-up.
 
 Finally, this work intentionally restricts its scope to zero-shot scoring, without any supervised component. Evaluating these same representations as input features to lightweight supervised classifiers in a few-shot, per-gene regime --- an approach considered during the design of this study but excluded to keep the comparison strictly zero-shot --- could clarify whether the gap between log-ratio and delta-embedding representations persists, narrows, or reverses once even a small amount of gene-specific supervision is introduced.
 
